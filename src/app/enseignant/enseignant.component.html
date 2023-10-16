@@ -1,0 +1,75 @@
+<!-- Include any necessary styles/scripts like Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Gestion Enseignants</h4>
+        <h5 class="card-subtitle">Liste des Enseignants</h5>
+
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-outline-info" (click)="toggleAddPopup()">Ajouter</button>
+        </div>
+
+        <div *ngIf="isAddPopupOpen" class="modal" tabindex="-1" role="dialog" style="display: block;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Ajouter Enseignant</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form (ngSubmit)="createEnseignant()">
+                            <div class="form-group">
+                                <label for="enseignantNom">Nom de l'Enseignant</label>
+                                <input type="text" class="form-control" id="enseignantNom" placeholder="Entrez le nom de l'enseignant" [(ngModel)]="addEnseignantData.nom">
+                            </div>
+                            <div class="form-group">
+                                <label for="enseignantPrenom">Prénom</label>
+                                <input type="text" class="form-control" id="enseignantPrenom" placeholder="Entrez le prénom de l'enseignant" [(ngModel)]="addEnseignantData.prenom">
+                            </div>
+                            <div class="form-group">
+                                <label for="enseignantEmail">Email</label>
+                                <input type="email" class="form-control" id="enseignantEmail" placeholder="Entrez l'email de l'enseignant" [(ngModel)]="addEnseignantData.email">
+                            </div>
+                            <div class="form-group">
+                                <label for="contratEnseignant">Sélectionner le Contrat</label>
+                                <select class="form-select" id="contratEnseignant" [(ngModel)]="addEnseignantData.contrat.id">
+                                    <option *ngFor="let contrat of contrats" [value]="contrat.id">{{ contrat.nom }}</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger" (click)="toggleAddPopup()">Fermer</button>
+                        <button type="button" class="btn btn-outline-success" (click)="createEnseignant()">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th class="text-dark font-medium fs-4">Nom</th>
+                        <th class="text-dark font-medium fs-4">Prénom</th>
+                        <th class="text-dark font-medium fs-4">Email</th>
+                        <th class="text-dark font-medium fs-4">Contrat</th>
+                        <th class="text-dark font-medium fs-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let enseignant of enseignants">
+                        <td>{{ enseignant.nom }}</td>
+                        <td>{{ enseignant.prenom }}</td>
+                        <td>{{ enseignant.email }}</td>
+                        <td>{{ enseignant.contrat.nom }}</td>
+                        <td>
+                            <button style="background: none; border: none;" (click)="deleteEnseignant(enseignant.id)"><i class="fa fa-trash" style="margin-right: 20px;"></i></button>
+                            <button style="background: none; border: none;" (click)="toggleUpdatePopup(enseignant)"><i class="fa fa-pencil"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

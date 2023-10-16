@@ -1,0 +1,140 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<div class="card">
+  <div class="card-body">
+    <!-- title -->
+    <h4 class="card-title">Gestion Contrats</h4>
+    <h5 class="card-subtitle">List Contrats</h5>
+
+    <!-- Button to open the popup form for adding a Contrat -->
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-outline-info" (click)="toggleAddPopup()">Ajouter</button>
+    </div>
+
+    <!-- Popup Add Contrat -->
+    <div *ngIf="isAddPopupOpen" class="modal" tabindex="-1" role="dialog" style="display: block;">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Ajouter Contrat</h5>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="contratType">Type de Contrat</label>
+              <select class="form-control" id="contratType" [(ngModel)]="addContratData.type">
+                <!-- You can populate the dropdown with the contract types from your application -->
+                <option value="CDI">CDI</option>
+                <option value="CDD">CDD</option>
+                <!-- Add more options as needed -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="contratDateDebut">Date de Début</label>
+              <input type="date" class="form-control" id="contratDateDebut" [(ngModel)]="addContratData.dateDebut">
+            </div>
+            <div class="form-group">
+              <label for="contratDateFin">Date de Fin</label>
+              <input type="date" class="form-control" id="contratDateFin" [(ngModel)]="addContratData.dateFin">
+            </div>
+            <div class="form-group">
+              <label for="contratSalaire">Salaire</label>
+              <input type="number" class="form-control" id="contratSalaire" [(ngModel)]="addContratData.salaire">
+            </div>
+            <div class="form-group">
+              <label for="contratLieu">Lieu de Travail</label>
+              <input type="text" class="form-control" id="contratLieu" placeholder="Entrez le lieu de travail" [(ngModel)]="addContratData.lieu">
+            </div>
+            <div class="form-group">
+              <label for="contratDuree">Durée</label>
+              <input type="text" class="form-control" id="contratDuree" placeholder="Entrez la durée" [(ngModel)]="addContratData.duree">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-danger" (click)="toggleAddPopup()">Fermer</button>
+            <button type="button" class="btn btn-outline-success" (click)="createContrat(addContratData)">Enregistrer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Update Popup (similar structure to Add Popup) -->
+    <div *ngIf="isUpdatePopupOpen" class="modal" tabindex="-1" role="dialog" style="display: block;">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modifier Contrat</h5>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="updateContratType">Type de Contrat</label>
+              <select class="form-control" id="updateContratType" [(ngModel)]="updateContratData.type">
+                <!-- You can populate the dropdown with the contract types from your application -->
+                <option value="CDI">CDI</option>
+                <option value="CDD">CDD</option>
+                <!-- Add more options as needed -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="updateContratDateDebut">Date de Début</label>
+              <input type="date" class="form-control" id="updateContratDateDebut" [(ngModel)]="updateContratData.dateDebut">
+            </div>
+            <div class="form-group">
+              <label for="updateContratDateFin">Date de Fin</label>
+              <input type="date" class="form-control" id="updateContratDateFin" [(ngModel)]="updateContratData.dateFin">
+            </div>
+            <div class="form-group">
+              <label for="updateContratSalaire">Salaire</label>
+              <input type="number" class="form-control" id="updateContratSalaire" [(ngModel)]="updateContratData.salaire">
+            </div>
+            <div class="form-group">
+              <label for="updateContratLieu">Lieu de Travail</label>
+              <input type="text" class="form-control" id="updateContratLieu" [(ngModel)]="updateContratData.lieu">
+            </div>
+            <div class="form-group">
+              <label for="updateContratDuree">Durée</label>
+              <input type="text" class="form-control" id="updateContratDuree" [(ngModel)]="updateContratData.duree">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-danger" (click)="toggleUpdatePopup1()">Fermer</button>
+            <button type="button" class="btn btn-outline-success" (click)="updateContrat(updateContratData.id, updateContratData)">Enregistrer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table for displaying Contrats -->
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th class="text-dark font-medium fs-4">Type de Contrat</th>
+            <th class="text-dark font-medium fs-4">Date de Début</th>
+            <th class="text-dark font-medium fs-4">Date de Fin</th>
+            <th class="text-dark font-medium fs-4">Salaire</th>
+            <th class="text-dark font-medium fs-4">Lieu de Travail</th>
+            <th class="text-dark font-medium fs-4">Durée</th>
+            <th class="text-dark font-medium fs-4">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let contrat of contrats">
+            <td>{{ contrat.type }}</td>
+            <td>{{ contrat.dateDebut }}</td>
+            <td>{{ contrat.dateFin }}</td>
+            <td>{{ contrat.salaire }}</td>
+            <td>{{ contrat.lieu }}</td>
+            <td>{{ contrat.duree }}</td>
+            <td>
+              <button style="background: none; border: none;" (click)="deleteContrat(contrat.id)">
+                <i class="fa fa-trash" style="margin-right: 20px;"></i>
+              </button>
+              <button style="background: none; border: none;" (click)="toggleUpdatePopup(contrat)">
+                <i class="fa fa-pencil"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
