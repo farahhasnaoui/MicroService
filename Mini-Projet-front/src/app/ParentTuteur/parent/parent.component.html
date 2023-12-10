@@ -1,0 +1,121 @@
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class="card">
+    <div class="card-body">
+        <!-- title -->
+        <h4 class="card-title">Gestion Parent</h4>
+        <h5 class="card-subtitle">List Parents</h5>
+
+        <!-- Button to open the popup form -->
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-outline-info" (click)="toggleAddPopup()">Ajouter</button>
+        </div>
+
+        <!-- Popup Add -->
+        <div *ngIf="isAddPopupOpen" class="modal" tabindex="-1" role="dialog" style="display: block;">
+            <form class="forms-sample" [formGroup]="fg"  >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Ajouter Parent</h5>
+                       
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="parentName">Nom</label>
+                            <input type="text" class="form-control" formControlName="firstName" id="parentName" placeholder="Entrez le nom du parent">
+                        </div>
+                        <div class="form-group">
+                            <label for="parentLastName">Prenom</label>
+                            <input type="text" class="form-control" formControlName="lastName" id="parentEmail" placeholder="Entrez le prenom du parent">
+                        </div>
+           
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger" (click)=" toggleclosePopup()">Fermer</button>
+                        <button  [disabled]="fg.invalid" type="submit" class="btn btn-outline-success" (click)="addParent(fg)">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+           </form>
+        </div>
+        <!-- Update Popup -->
+<div *ngIf="isUpdatePopupOpen" class="modal" tabindex="-1" role="dialog" style="display: block;">
+    <form class="forms-sample" #f="ngForm">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Modifier Parent</h5>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="updateParentName">Nom</label>
+            <input type="text" class="form-control" id="updateParentName" [(ngModel)]="Parent.firstName" [ngModel]  [ngModelOptions]="{standalone: true}"  placeholder="Entrez le nom du parent">
+          </div>
+          <div class="form-group">
+            <label for="updateParentEmail">Prenom</label>
+            <input type="text" class="form-control" id="updateParent" [(ngModel)]="Parent.lastName" [ngModel]  [ngModelOptions]="{standalone: true}" placeholder="Entrez le prenom du parent">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-danger" (click)="toggleUpdatePopup()">Fermer</button>
+          <button type="button" class="btn btn-outline-success" (click)="updateParent(Parent)">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+</form>
+  </div>
+  
+   <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th class="text-dark font-medium fs-4">ID</th>
+                        <th class="text-dark font-medium fs-4">NOM</th>
+                        <th class="text-dark font-medium fs-4">PRENOM</th>
+                        <th class="text-dark font-medium fs-4">Actions</th>
+                        <th class="text-dark font-medium fs-4">Affecter un Tuteur</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let p of Parents">
+                    <tr >
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <!-- <img [src]=ts.image alt="user" width="45" class="rounded-circle"> -->
+                                <div class="ms-3">
+                                    <h5 class="mb-0 font-medium">{{p.id}}</h5>
+                                    <!-- <span class="text-muted">aaaa@</span> -->
+                                </div>
+                            </div>
+                        </td>
+                       
+                        <td>
+                            <h5 class="mb-0 fw-normal">{{p.firstName}}</h5>
+                        </td>
+                        
+                        <td>
+                            <h5 class="mb-0 fw-normal">{{p.lastName}}</h5>
+                        </td>
+                        
+                        <td>
+                           
+                            <button style="background: none; border: none;" (click)="deletParent(p.id)" ><i class="fa fa-trash" style="margin-right: 20px;"></i></button>
+                            <button style="background: none; border: none;" (click)="updateParentData(p)"><i class="fa fa-pencil"></i></button>
+                            
+                        </td>
+                        <td>
+                            <select id="tuteurSelect" [(ngModel)]="selectedTuteurId">
+                                <option *ngFor="let tuteur of tuteursForSelect" [value]="tuteur.id">{{ tuteur.firstName +" "+ tuteur.lastName }}</option>
+                              </select>
+                            <button style="background: none; border: none;" (click)="affecterParentTuteur(p.id,selectedTuteurId)"><i class="fa fa-save"></i> </button>
+                        </td>
+                        
+                    </tr>              
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

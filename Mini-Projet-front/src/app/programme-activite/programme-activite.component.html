@@ -1,0 +1,164 @@
+
+<style>
+    .chart {
+      display: inline-block;
+      margin-right: 40px; /* Increase the margin for more separation */
+      width: 45%; /* Adjust the width for larger charts */
+    }
+  
+    .table-responsive {
+      margin-top: 40px; /* Add more space between the table and charts */
+    }
+</style>
+
+  
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class="card">
+    <div class="card-body">
+        <!-- title -->
+        <h4 class="card-title">Gestion Programmes</h4>
+        <h5 class="card-subtitle">List Programmes</h5> 
+        <div class="mt-4">
+            <h5 class="text-dark font-medium fs-4">Total Number of Programs: {{ programCount }}</h5>
+
+        </div>
+
+        <!-- Button to open the popup form for adding a Programme -->
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-outline-info" (click)="toggleAddPopup()">Ajouter</button>
+            <!-- <button class="btn btn-outline-info" (click)="togglestatPopup()">Statistiques</button> -->
+
+        </div> 
+      
+
+        <!-- Popup Add Programme -->
+        <div *ngIf="isAddPopupOpen" class="modal" tabindex="-1" role="dialog" style="display: block;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Ajouter Programme</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="programmeNom">Nom du Programme</label>
+                            <input type="text" class="form-control" id="programmeNom" placeholder="Entrez le nom du programme" [(ngModel)]="addProgrammeData.nom">
+                        </div>
+                        <div class="form-group">
+                            <label for="programmeDescription">Description</label>
+                            <input type="text" class="form-control" id="programmeDescription" placeholder="Entrez la description du programme" [(ngModel)]="addProgrammeData.description">
+                        </div>
+                        <div class="form-group">
+                            <label for="programmeObjectif">Objectif</label>
+                            <input type="text" class="form-control" id="programmeObjectif" placeholder="Entrez l'objectif du programme" [(ngModel)]="addProgrammeData.objectif">
+                        </div>
+                        <div class="form-group">
+                            <label for="programmeNiveau">Niveau</label>
+                            <input type="text" class="form-control" id="programmeNiveau" placeholder="Entrez le niveau du programme" [(ngModel)]="addProgrammeData.niveau">
+                        </div>
+                        <div class="form-group">
+                            <label for="programmeDuree">Durée en Semaines</label>
+                            <input type="number" class="form-control" id="programmeDuree" placeholder="Entrez la durée en semaines" [(ngModel)]="addProgrammeData.dureeEnSemaines">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger" (click)="toggleAddPopup()">Fermer</button>
+                        <button type="button" class="btn btn-outline-success" (click)="createProgramme(addProgrammeData)">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Update Popup (similar structure to Add Popup) -->
+        <div *ngIf="isUpdatePopupOpen" class="modal" tabindex="-1" role="dialog" style="display: block;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Modifier Programme</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="updateProgrammeNom">Nom du Programme</label>
+                            <input type="text" class="form-control" id="updateProgrammeNom" [(ngModel)]="updateProgrammeData.nom">
+                        </div>
+                        <div class="form-group">
+                            <label for="updateProgrammeDescription">Description</label>
+                            <input type="text" class="form-control" id="updateProgrammeDescription" [(ngModel)]="updateProgrammeData.description">
+                        </div>
+                        <div class="form-group">
+                            <label for="updateProgrammeObjectif">Objectif</label>
+                            <input type="text" class="form-control" id="updateProgrammeObjectif" [(ngModel)]="updateProgrammeData.objectif">
+                        </div>
+                        <div class="form-group">
+                            <label for="updateProgrammeNiveau">Niveau</label>
+                            <input type="text" class="form-control" id="updateProgrammeNiveau" [(ngModel)]="updateProgrammeData.niveau">
+                        </div>
+                        <div class="form-group">
+                            <label for="updateProgrammeDuree">Durée en Semaines</label>
+                            <input type="number" class="form-control" id="updateProgrammeDuree" [(ngModel)]="updateProgrammeData.dureeEnSemaines">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger" (click)="toggleUpdatePopup1()">Fermer</button>
+                        <button type="button" class="btn btn-outline-success" (click)="updateProgramme(updateProgrammeData.id, updateProgrammeData)">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table for displaying Programmes -->
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th class="text-dark font-medium fs-4">Nom</th>
+                        <th class="text-dark font-medium fs-4">Description</th>
+                        <th class="text-dark font-medium fs-4">Objectif</th>
+                        <th class="text-dark font-medium fs-4">Niveau</th>
+                        <th class="text-dark font-medium fs-4">Durée en Semaines</th>
+                        <th class="text-dark font-medium fs-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let programme of programmes">
+                        <td>{{ programme.nom }}</td>
+                        <td>{{ programme.description }}</td>
+                        <td>{{ programme.objectif }}</td>
+                        <td>{{ programme.niveau }}</td>
+                        <td>{{ programme.dureeEnSemaines }}</td>
+                        <td>
+                            <button style="background: none; border: none;" (click)="deleteProgramme(programme.id)"><i class="fa fa-trash" style="margin-right: 20px;"></i></button>
+                            <button style="background: none; border: none;" (click)="toggleUpdatePopup(programme)"><i class="fa fa-pencil"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table> 
+           
+          
+            <div>
+
+        
+
+  
+              
+   
+                  
+              
+            
+    </div>
+</div> 
+<br /> 
+<br />
+<br />
+<br />
+<br />
+
+
+<div class="chart">
+    <canvas #averageActivitiesChart id="average-activities-chart"></canvas>
+</div>
+<div class="chart">
+    <canvas #longestDurationChart id="longest-duration-chart"></canvas>
+</div>
+

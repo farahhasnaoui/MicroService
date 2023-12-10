@@ -1,0 +1,321 @@
+#version: "3.9"
+#services:
+#  Candidat:
+#    container_name: ProgrammeActivite
+#    image: "chedlyimagee"
+#    build: .\Candidat
+#    ports:
+#      - "8081:8085"
+#    environment:
+#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://serviceregistry:8761/eureka/
+#    depends_on:
+#      - Eureka
+#      - Keycloak
+#
+#
+#  Eureka:
+#    container_name: eureka
+#    build: .\EurekaServer
+#    hostname: serviceregistry
+#    ports:
+#      - "8761:8761"
+#    image: "eureka"
+#    environment:
+#      - eureka.client.serviceUrl.defaultZone=http://serviceregistry:8761/eureka/
+#
+#  Keycloak:
+#    container_name: keycloak
+#    image: jboss/keycloak
+#    ports:
+#      - "8180:8080"
+#    command:
+#      - "-b 0.0.0.0"
+#      - "-DKEYCLOAK_IMPORT=/tmp/keycloak/config/realm-export.json"
+#    volumes:
+#      - ./realm-export.json:/tmp/keycloak
+#    environment:
+#      - KEYCLOAK_USER=admin
+#      - KEYCLOAK_PASSWORD=admin
+#
+#
+#
+#version: "3.9"
+#services:
+#  Candidat:
+#    container_name: ProgrammeActivite
+#    image: "chedlyimagee"
+#    build: ./Candidat
+#    ports:
+#      - "8081:8085"
+#    environment:
+#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka/
+#    depends_on:
+#      - Eureka
+#      - Keycloak
+#
+#  Eureka:
+#    container_name: eureka
+#    build: ./EurekaServer
+#    hostname: serviceregistry
+#    ports:
+#      - "8761:8761"
+#    image: "eureka"
+#    environment:
+#      - eureka.client.serviceUrl.defaultZone=http://serviceregistry:8761/eureka/
+#
+#  Keycloak:
+#    container_name: keycloak
+#    image: jboss/keycloak
+#    ports:
+#      - "8180:8080"
+#    command:
+#      - "-b 0.0.0.0"
+#      - "-Dkeycloak.migration.action=import"
+#      - "-Dkeycloak.migration.provider=singleFile"
+#      - "-Dkeycloak.migration.file=/tmp/keycloak/config/realm-export.json"
+#    volumes:
+#      - ./realm-export.json:/tmp/keycloak/config/realm-export.json
+#    environment:
+#      - KEYCLOAK_USER=admin
+#      - KEYCLOAK_PASSWORD=admin
+#
+#version: '3.9'
+#services:
+#  api-gateway:
+#    build:
+#      context: ./API_Gateway
+#    ports:
+#      - "8080:8080"
+#    restart: on-failure
+#    environment:
+#      #overriding spring application.properties
+#      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka/
+#     # - keycloak-client.server-url=http://192.168.1.13:18080/auth # use host name or ip of the host machine
+#    depends_on:
+#      - eureka-server
+#  eureka-server:
+#      build:
+#        context: ./EurekaServer
+#      ports:
+#        - "8761:8761"
+#      restart: on-failure
+#  microservice-consumer:
+#      build:
+#        context: ./microservice-consumer
+#      ports:
+#        - "9080:9080"
+#      restart: on-failure
+#      environment:
+#        #overriding spring application.properties
+#        - eureka.client.serviceUrl.defaultZone=http://eureka-server:9091/eureka/
+#        - keycloak-client.server-url=http://192.168.1.183:18080/auth # use host name or ip of the host machine
+#      depends_on:
+#        - eureka-server
+
+ 
+#  activiteprogramme:
+#    build:
+#      context: ./Candidat
+#    ports:
+#      - "8081:8081"
+#   
+#    restart: on-failure
+#    environment:
+#      #overriding spring application.properties
+#      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka/
+#      - keycloak-client.server-url=http://192.168.1.13:18080/auth # use host name or ip of the host machine
+#    depends_on:
+#      - eureka-server
+#  microservice-producer:
+#    build:
+#      context: ./microservice-producer
+#    ports:
+#      - "9081:9081"
+#    restart: on-failure
+#    environment:
+#      #overriding spring application.properties
+#      - eureka.client.serviceUrl.defaultZone=http://eureka-server:9091/eureka/
+#      - keycloak-client.server-url=http://192.168.1.183:18080/auth # use host name or ip of the host machine
+#    depends_on:
+#      - eureka-server
+#  keycloak:
+#    image: jboss/keycloak:11.0.0
+#    volumes:
+#      - ./realm-export.json:/tmp/keycloak/config/realm-export.json
+#    environment:
+#      KEYCLOAK_USER: admin
+#      KEYCLOAK_PASSWORD: admin
+#      KEYCLOAK_IMPORT: /tmp/keycloak/config/realm-export.json
+#      DB_VENDOR: POSTGRES
+#      DB_ADDR: postgres
+#      DB_DATABASE: keycloak
+#      DB_USER: keycloak
+#      DB_SCHEMA: public
+#      DB_PASSWORD: password
+#    ports:
+#      - "18080:18080"
+#    command:
+#      - "-b"
+#      - "0.0.0.0"
+#      - "-Djboss.socket.binding.port-offset=10000"
+#    restart: on-failure
+#    depends_on:
+#      - postgres
+#  postgres:
+#    image: postgres
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#    environment:
+#      POSTGRES_DB: keycloak
+#      POSTGRES_USER: keycloak
+#      POSTGRES_PASSWORD: password
+#volumes:
+#  postgres_data:
+#    name: keycloak_postgres_data
+#    driver: local 
+
+version: '3.9'
+services:
+ 
+  mongoDB:
+    container_name: mongoDB
+    image: mongo
+    ports:
+      - "27017:27017"
+  applicationfront:
+    image: applicationfront
+    build: ./Mini-Projet-front
+    network_mode: host
+    container_name: angular-container
+    ports:
+      - 4200:80
+  nodeapp:
+    container_name: nodeapp
+    restart: always
+    build: ./Mini-Projet-auth-node
+    ports:
+      - '9000:8880'
+    depends_on:
+      - mongoDB
+      - eureka-server
+    
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka/
+      
+    
+  mysql_db:
+    image: "mysql:8.0"
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: candidat
+      MYSQL_USER: java_to_dev
+      MYSQL_PASSWORD: nE5kMc7JCGNqwDQM
+      MYSQL_ROOT_PASSWORD: nE5kMc7JCGNqwDQN
+ 
+  api-gateway:
+    build:
+      context: ./API_Gateway
+    ports:
+      - "8089:8089"
+    restart: on-failure
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
+
+  eureka-server:
+    build:
+      context: ./EurekaServer
+    ports:
+      - "8761:8761"
+    restart: on-failure
+
+  activiteprogramme:
+    build:
+      context: ./Candidat
+    ports:
+      - "8081:8080"
+    restart: on-failure
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka/
+      - keycloak-client.server-url=http://192.168.1.13:18080/auth
+      - spring.h2.console.enabled=true
+      - spring.h2.console.path=/h2
+      - spring.datasource.username=chedly
+      - spring.datasource.password=
+      - spring.datasource.driver-class-name=org.h2.Driver
+      - spring.jpa.hibernate.ddl-auto=update
+      - spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+      - spring.datasource.url=jdbc:h2:file:./Database/Data/MicroserviceP
+    depends_on:
+      - eureka-server
+  eleveclasse:
+    build:
+      context: ./Candidat1
+    ports:
+      - "9084:9084"
+    restart: on-failure
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka/
+      - keycloak-client.server-url=http://192.168.1.13:18080/auth
+    depends_on:
+      - eureka-server
+      - mysql_db
+    links:
+      - mysql_db:app_db
+  contratenseignat:
+    build:
+      context: ./Candidat2
+    ports:
+      - "8096:8096"
+    restart: on-failure
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka/
+      - keycloak-client.server-url=http://192.168.1.13:18080/auth
+    depends_on:
+      - eureka-server
+      - mysql_db
+    links:
+      - mysql_db:app_db
+
+
+  parenttuteur:
+    build:
+      context: ./Mini-Projet-MS-parentTuteur
+    ports:
+      - "8082:8082"
+    restart: on-failure
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka/
+      - keycloak-client.server-url=http://192.168.1.13:18080/auth
+      - spring.h2.console.enabled=true
+      - spring.h2.console.path=/h2
+      - spring.datasource.username=omar
+      - spring.datasource.password=
+      - spring.datasource.driver-class-name=org.h2.Driver
+      - spring.jpa.hibernate.ddl-auto=update
+      - spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+      - spring.datasource.url=jdbc:h2:file:./Database/Data/ParentTuteur
+    depends_on:
+      - eureka-server
+  keycloak:
+    image: jboss/keycloak:11.0.0
+    volumes:
+      - ./realm-export.json:/tmp/keycloak/config/realm-export.json
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_IMPORT: /tmp/keycloak/config/realm-export.json
+     
+    ports:
+      - "18080:18080"
+    command:
+      - "-b"
+      - "0.0.0.0"
+      - "-Djboss.socket.binding.port-offset=10000"
+    restart: on-failure
+volumes:
+  db:
+  

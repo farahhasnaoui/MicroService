@@ -1,0 +1,5 @@
+FROM openjdk:8
+WORKDIR /app
+COPY target/API_Gateway-0.0.1-SNAPSHOT.jar API_Gateway-0.0.1-SNAPSHOT.jar
+EXPOSE 8080
+CMD ["java", "-jar", "API_Gateway-0.0.1-SNAPSHOT.jar"]

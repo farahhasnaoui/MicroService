@@ -1,0 +1,40 @@
+<div class="container">
+    <div class="auth-switch">
+      <button class="btn btn-toggle" (click)="toggleView()">
+        {{ showSignin ? 'Inscription' : 'Connexion' }}
+      </button>
+    </div>
+  
+   
+  <div *ngIf="showSignin" class="form">
+    <h2>Connexion</h2>
+    <div class="form-group">
+      <label for="email"><i class="fas fa-envelope"></i> Adresse e-mail</label>
+      <input type="email" id="email" [(ngModel)]="email" name="email" required>
+    </div>
+    <div class="form-group">
+      <label for="password"><i class="fas fa-lock"></i> Mot de passe</label>
+      <input type="password" id="password" [(ngModel)]="password" name="password" required>
+    </div>
+    <button class="btn btn-primary" (click)="signIn(email, password)">Se connecter</button>
+  </div>
+  
+    <form *ngIf="!showSignin" (ngSubmit)="signUp()" class="form">
+      <h2>Inscription</h2>
+      <div class="form-group">
+        <label for="newUsername">Nom d'utilisateur</label>
+        <input type="text" id="newUsername" name="username" [(ngModel)]="user.username" required>
+      </div>
+      <div class="form-group">
+        <label for="newEmail">Adresse e-mail</label>
+        <input type="email" id="newEmail" name="email" [(ngModel)]="user.email" required>
+      </div>
+      <div class="form-group">
+        <label for="newPassword">Mot de passe</label>
+        <input type="password" id="newPassword" name="password" [(ngModel)]="user.password" required>
+      </div>
+      <button class="btn btn-primary" type="submit">S'inscrire</button>
+    </form>
+    
+  </div>
+  

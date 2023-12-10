@@ -1,0 +1,102 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title">Gestion Tuteur</h4>
+    <h5 class="card-subtitle">List Tuteurs</h5>
+
+    <!-- Button to open the Add Tuteur popup form -->
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-outline-info" (click)="toggleAddPopup()">Ajouter</button>
+    </div>
+
+    <!-- Popup Add Tuteur -->
+    <div *ngIf="isAddPopupOpen" class="modal" tabindex="-1" role="dialog" style="display: block;">
+      <form class="forms-sample" [formGroup]="fg" >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Ajouter Tuteur</h5>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="parentName">Nom</label>
+                <input type="text" class="form-control" formControlName="firstName" placeholder="Entrez le nom du tuteur">
+              </div>
+              <div class="form-group">
+                <label for="parentLastName">Prenom</label>
+                <input type="text" class="form-control" formControlName="lastName" placeholder="Entrez le prenom du tuteur">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-danger" >Fermer</button>
+              <button [disabled]="fg.invalid" type="submit" class="btn btn-outline-success"  (click)="addTuteur(fg)">Enregistrer</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Update Tuteur Popup -->
+    <div *ngIf="isUpdatePopupOpen" class="modal" tabindex="-1" role="dialog" style="display: block;">
+      <form class="forms-sample" #f="ngForm">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Modifier Tuteur</h5>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="updateParentName">Nom</label>
+                <input type="text" class="form-control" [(ngModel)]="Tuteur.firstName" [ngModel]  [ngModelOptions]="{standalone: true}" placeholder="Entrez le nom du tuteur">
+              </div>
+              <div class="form-group">
+                <label for="updateParentEmail">Prenom</label>
+                <input type="text" class="form-control" [(ngModel)]="Tuteur.lastName" [ngModel]  [ngModelOptions]="{standalone: true}" placeholder="Entrez le prenom du tuteur">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-danger" (click)="toggleUpdatePopup()">Fermer</button>
+              <button type="submit" class="btn btn-outline-success" (click)="updateTuteur(Tuteur)">Enregistrer</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Tuteurs Table -->
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th class="text-dark font-medium fs-4">ID</th>
+            <th class="text-dark font-medium fs-4">NOM</th>
+            <th class="text-dark font-medium fs-4">PRENOM</th>
+            <th class="text-dark font-medium fs-4">Actions</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let tuteur of Tuteurs">
+          <tr>
+            <td>
+              <div class="d-flex align-items-center">
+                <div class="ms-3">
+                  <h5 class="mb-0 font-medium">{{ tuteur.id }}</h5>
+                </div>
+              </div>
+            </td>
+            <td>
+              <h5 class="mb-0 fw-normal">{{ tuteur.firstName }}</h5>
+            </td>
+            <td>
+              <h5 class="mb-0 fw-normal">{{ tuteur.lastName }}</h5>
+            </td>
+            <td>
+              <button style="background: none; border: none;" (click)="deleteTuteur(tuteur.id)"><i class="fa fa-trash" style="margin-right: 20px;"></i></button>
+              <button style="background: none; border: none;" (click)="updateTuteurData(tuteur)"><i class="fa fa-pencil"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
